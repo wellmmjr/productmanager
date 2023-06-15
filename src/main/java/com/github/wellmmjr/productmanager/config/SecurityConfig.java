@@ -3,24 +3,25 @@ package com.github.wellmmjr.productmanager.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer.JwtConfigurer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.github.wellmmjr.productmanager.security.jwt.security.jwt.JwtConfigurer;
 import com.github.wellmmjr.productmanager.security.jwt.security.jwt.JwtTokenProvider;
 
+
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig {
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
-
-//	public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-//		this.jwtTokenProvider = jwtTokenProvider;
-//	}
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -29,18 +30,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception{
-		return super.authenticationManagerBean();
-	}
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+		}
 	
+	@Bean
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.httpBasic().disable().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.authorizeRequests().antMatchers("/auth/signin", "/api-docs/**", "swagger-ui.html").permitAll().antMatchers("/api/**")
-			.authenticated().antMatchers("/users").denyAll().and().apply(new JwtConfigurer(jwtTokenProvider));
+			.authorizeHttpRequests(request -> request
+				.requestMatchers("/auth/signin", "/api-docs/**", "swagger-ui.html").permitAll()
+				.antMatchers("/api/**").authenticated()
+				.antMatchers("/users").denyAll()
+				.and().apply(new JwtConfigurer(jwtTokenProvider))
+			);
 		
 	}
-	
 	
 }

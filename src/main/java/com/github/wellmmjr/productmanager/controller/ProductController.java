@@ -1,7 +1,7 @@
 package com.github.wellmmjr.productmanager.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -94,7 +94,7 @@ public class ProductController {
 				linkTo(methodOn(ProductController.class).findById(p.getKey())).withSelfRel())
 				);
 		
-		PagedResources<?> resources =  assemble.toResource(persons);
+		PagedModel<?> resources =  assemble.toModel(persons);
 		
 		return new ResponseEntity<>(resources, HttpStatus.OK);
 		
@@ -118,7 +118,7 @@ public class ProductController {
 				linkTo(methodOn(ProductController.class).findById(p.getKey())).withSelfRel())
 		);
 		
-		PagedResources<?> resources =  assemble.toResource(persons);
+		PagedModel<?> resources =  assemble.toModel(persons);
 		
 		return new ResponseEntity<>(resources, HttpStatus.OK);
 		
