@@ -11,9 +11,9 @@ import com.github.wellmmjr.productmanager.data.model.Comments;
 public interface CommentsRepository extends JpaRepository<Comments, Long>{
 
 	
-	@Query("SELECT c FROM product_comments c "
-			+ "left join product p on c.fkid_porduct = p.id "
-			+ "WHERE c.fkid_product = :productId AND p.enable = true ORDER BY launch_date desc ")
+	@Query("SELECT DISTINCT p.id, p.product_name as nome_produto,  FROM product p "
+			+ "join product_comments c on c.fkid_porduct = p.id "
+			+ "WHERE p.id = :productId AND p.enable = true ORDER BY c.launch_date desc ")
 	Page<Comments> findCommentsByProduct(@Param("productId") int productId, Pageable pageable);
 	
 }

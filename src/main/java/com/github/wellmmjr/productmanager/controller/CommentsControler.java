@@ -37,10 +37,10 @@ public class CommentsControler {
 	@ApiOperation(value="Allows create Commentse by this endpoint")
 	@PostMapping(value = "/create", produces = {"application/json", "application/xml", "application/x-yaml"}, 
 			consumes = {"application/json", "application/xml", "application/x-yaml"})
-	public CommentsVO create(@RequestBody CommentsVO commentVO){
+	public CommentsVO create(@RequestBody CommentsVO restCommentVO){
 		
-		CommentsVO commentsVO = services.create(commentVO);
-		commentsVO.add(linkTo(methodOn(CommentsControler.class).findById(commentVO.getKey())).withSelfRel());
+		CommentsVO commentsVO = services.create(restCommentVO);
+		commentsVO.add(linkTo(methodOn(CommentsControler.class).findById(restCommentVO.getKey())).withSelfRel());
 		return commentsVO;
 		
 	}
@@ -48,11 +48,11 @@ public class CommentsControler {
 	@ApiOperation(value="Allows update Product by id through endpoint")
 	@PutMapping(value = "/update", produces = {"application/json", "application/xml", "application/x-yaml"}, 
 			consumes = {"application/json", "application/xml", "application/x-yaml"})
-	public CommentsVO update(@RequestBody CommentsVO commentVO){
+	public CommentsVO update(@RequestBody CommentsVO restCommentVO){
 		
-		CommentsVO commentsVO = services.updateComment(commentVO);
-		commentVO.add(linkTo(methodOn(CommentsControler.class).findById(commentVO.getKey())).withSelfRel());
-		return commentVO;
+		CommentsVO commentsVO = services.updateComment(restCommentVO);
+		commentsVO.add(linkTo(methodOn(CommentsControler.class).findById(restCommentVO.getKey())).withSelfRel());
+		return commentsVO;
 		
 	}
 	

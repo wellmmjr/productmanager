@@ -40,8 +40,8 @@ public class SecurityConfig {
 		http.httpBasic().disable().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeHttpRequests(request -> request
 				.requestMatchers("/auth/signin", "/api-docs/**", "swagger-ui.html").permitAll()
-				.antMatchers("/api/**").authenticated()
-				.antMatchers("/users").denyAll()
+				.requestMatchers("/api/**").authenticated()
+				.requestMatchers("/users").denyAll()
 				.and().apply(new JwtConfigurer(jwtTokenProvider))
 			);
 		
