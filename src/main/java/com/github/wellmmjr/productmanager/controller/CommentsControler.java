@@ -21,6 +21,7 @@ import com.github.wellmmjr.productmanager.services.CommentsServices;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.websocket.server.PathParam;
 
 @Api(value="Comments Endpoints", description = "Accepts and provides entity Comments xml, x-yaml, json contents", 
 tags= {"Comments Endpoints", "Comments"})
@@ -35,11 +36,11 @@ public class CommentsControler {
 	private PagedResourcesAssembler<CommentsVO> assemble;
 	
 	@ApiOperation(value="Allows create Commentse by this endpoint")
-	@PostMapping(value = "/create", produces = {"application/json", "application/xml", "application/x-yaml"}, 
+	@PutMapping(value = "/create/{id}", produces = {"application/json", "application/xml", "application/x-yaml"}, 
 			consumes = {"application/json", "application/xml", "application/x-yaml"})
-	public CommentsVO create(@RequestBody CommentsVO restCommentVO){
+	public CommentsVO create(@RequestBody CommentsVO restCommentVO, @PathVariable("id") Long productId){
 		
-		CommentsVO commentsVO = services.create(restCommentVO);
+		CommentsVO commentsVO = services.create(restCommentVO, productId);
 		commentsVO.add(linkTo(methodOn(CommentsControler.class).findById(restCommentVO.getKey())).withSelfRel());
 		return commentsVO;
 		
